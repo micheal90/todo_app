@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/providers/task.dart';
+
 import 'package:todo_app/screens/add_task_screen.dart';
 //screens
 import '../screens/tasks_screen.dart';
@@ -14,40 +17,47 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   int _currentIndex = 0;
+  var _pageController = PageController(initialPage: 0);
   void _changIndex(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
-  late List<Map<String, dynamic>> _pages;
+  late List<String> _pages;
   @override
   void initState() {
     _pages = [
-      {
-        'title': 'Tasks',
-        'body': TasksScreen(),
-      },
-      {
-        'title': 'InProgress Tasks',
-        'body': InprogressScreen(),
-      },
-      {
-        'title': 'Completed Tasks',
-        'body': CompletedScreen(),
-      },
+      'Tasks',
+      'InProgress Tasks',
+      'Completed Tasks',
     ];
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_pages[_currentIndex]['title'])),
-      body: _pages[_currentIndex]['body'],
+      appBar: AppBar(title: Text(_pages[_currentIndex])),
+      body: PageView(
+        controller: _pageController,
+        children: [
+          TasksScreen(),
+          InprogressScreen(),
+          CompletedScreen(),
+        ],
+        onPageChanged: _changIndex,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        onTap: _changIndex,
+        onTap: (index) {
+          _pageController.animateToPage(
+            index,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.linear,
+          );
+        },
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.task_alt), label: 'Tasks'),
           BottomNavigationBarItem(
@@ -58,8 +68,8 @@ class _TabScreenState extends State<TabScreen> {
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () => Navigator.pushNamed(
-                  context, AddTaskScreen.routeName,arguments: {}
-                  ),
+                  context, AddTaskScreen.routeName,
+                  arguments: {}),
               child: Icon(Icons.add),
             )
           : null,

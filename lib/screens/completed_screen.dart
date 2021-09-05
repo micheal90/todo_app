@@ -10,7 +10,7 @@ class CompletedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _tasks = Provider.of<Tasks>(context).task(status: Status.Completed);
+    var _tasks = Provider.of<Tasks>(context).tasks(status: Status.Completed);
     return ListView.separated(
         itemBuilder: (context, index) => ChangeNotifierProvider.value(
             value: _tasks[index], child: TaskWidget()),

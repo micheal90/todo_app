@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   var _dateController = TextEditingController();
   var _formKey = GlobalKey<FormState>();
   bool isEdit = false;
-  TimeOfDay? _selectedTime;
+  TimeOfDay? _selectedTime = TimeOfDay.now();
 
   void _showDatePicker() {
     showDatePicker(
@@ -54,7 +53,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         id!,
         _titleController.text,
         DateFormat().add_yMMMd().parse(_dateController.text),
-        _selectedTime ?? stringToTimeOfDay(_timeController.text),
+        _selectedTime!,
       );
     } else {
       Provider.of<Tasks>(context, listen: false).addTask(

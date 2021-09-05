@@ -10,7 +10,7 @@ class InprogressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _tasks = Provider.of<Tasks>(context).task(status: Status.InProgress);
+    var _tasks = Provider.of<Tasks>(context).tasks(status: Status.InProgress);
     return ListView.separated(
         itemBuilder: (context, index) => ChangeNotifierProvider.value(
             value: _tasks[index], child: TaskWidget()),
