@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task.dart';
 import 'package:todo_app/screens/add_task_screen.dart';
 import 'package:todo_app/util/database_helper.dart';
-import 'package:todo_app/widgets/waiting_screen.dart';
 //screens
 import './screens/tab_screen.dart';
 

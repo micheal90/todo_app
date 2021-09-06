@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:todo_app/providers/task.dart';
 
 import 'package:todo_app/screens/add_task_screen.dart';
 //screens
@@ -39,7 +37,9 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_pages[_currentIndex])),
+      appBar: AppBar(
+        title: Text(_pages[_currentIndex]),
+      ),
       body: PageView(
         controller: _pageController,
         children: [
@@ -68,8 +68,9 @@ class _TabScreenState extends State<TabScreen> {
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () => Navigator.pushNamed(
-                  context, AddTaskScreen.routeName,
-                  arguments: {}),
+                context,
+                AddTaskScreen.routeName,
+              ),
               child: Icon(Icons.add),
             )
           : null,

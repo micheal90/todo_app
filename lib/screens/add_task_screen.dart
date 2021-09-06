@@ -16,7 +16,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   var _timeController = TextEditingController();
   var _dateController = TextEditingController();
   var _formKey = GlobalKey<FormState>();
-  bool isEdit = false;
+  bool _isEdit = false;
+  bool _isFirst = true;
+  var args;
+  Task? _task;
   TimeOfDay? _selectedTime = TimeOfDay.now();
 
   void _showDatePicker() {
@@ -45,12 +48,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return TimeOfDay.fromDateTime(format.parse(tod));
   }
 
-  void _submit({int? id}) {
+  void _submit() {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-    if (isEdit) {
+    if (_task != null) {
       Provider.of<Tasks>(context, listen: false).updateTask(
-        id!,
+        _task!.id,
         _titleController.text,
         DateFormat().add_yMMMd().parse(_dateController.text),
         _selectedTime!,
@@ -65,20 +68,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     Navigator.pop(context);
   }
 
-  var _task;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var args = ModalRoute.of(context)!.settings.arguments as Map;
-    if (args.isNotEmpty) {
-      isEdit = args['isEdit'];
-    }
-    if (isEdit) {
-      _task = Provider.of<Tasks>(context).findTaskById(args['id']);
-      _titleController.text = _task.title;
-      _dateController.text =
-          _dateController.text = DateFormat().add_yMMMd().format(_task.date);
-      _timeController.text = _task.time.format(context);
+    if (_isFirst) {
+      args = ModalRoute.of(context)!.settings.arguments;
+      if (args != null) {
+        _task = Provider.of<Tasks>(context).findTaskById(args['id']);
+        _titleController.text = _task!.title;
+        _dateController.text =
+            _dateController.text = DateFormat().add_yMMMd().format(_task!.date);
+        _timeController.text = _task!.time.format(context);
+      }
+      _isFirst = false;
     }
   }
 
@@ -94,7 +96,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: isEdit ? Text('Edit Task') : Text('Add Task'),
+          title: _isEdit ? Text('Edit Task') : Text('Add Task'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -157,17 +159,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   height: 10,
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    if (isEdit) {
-                      _submit(id: _task.id);
-                    } else {
-                      _submit();
-                    }
-                  },
+                  onPressed: _submit,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(
-                      isEdit ? 'Update Task' : 'Add Task',
+                      _isEdit ? 'Update Task' : 'Add Task',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),

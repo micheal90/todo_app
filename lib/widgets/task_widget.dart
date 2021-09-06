@@ -36,11 +36,10 @@ class TaskWidget extends StatelessWidget {
           caption: 'Edit',
           color: Colors.blue,
           icon: Icons.edit,
-          onTap: () => Navigator.pushNamed(context, AddTaskScreen.routeName,
-              arguments: {
-                'id': _task.id,
-                'isEdit': true
-              }),
+          onTap: () =>
+              Navigator.pushNamed(context, AddTaskScreen.routeName, arguments: {
+            'id': _task.id,
+          }),
         ),
       ],
       secondaryActions: <Widget>[
@@ -51,7 +50,7 @@ class TaskWidget extends StatelessWidget {
           onTap: () =>
               Provider.of<Tasks>(context, listen: false).deleteTesk(_task.id),
         ),
-        if (_task.status != Status.InProgress )
+        if (_task.status != Status.InProgress)
           IconSlideAction(
             caption: 'InProgress',
             color: Colors.black45,
